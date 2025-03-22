@@ -1,7 +1,7 @@
 [
-    {"latitude": 34.0522, "longitude": -118.2437, "name": "Los Angeles"},
-    {"latitude": 35.6895, "longitude": 139.6917, "name": "Tokyo"},
-    {"latitude": 51.5074, "longitude": -0.1278, "name": "London"},
-    {"latitude": 19.4326, "longitude": -99.1332, "name": "Mexico City"},
-    {"latitude": -1.2921, "longitude": 36.8219, "name": "Nairobi"}
+    {"latitude": 34.0522, "longitude": -118.2437},
+    {"latitude": 35.6895, "longitude": 139.6917},
+    {"latitude": 51.5074, "longitude": -0.1278},
+    {"latitude": 19.4326, "longitude": -99.1332},
+    {"latitude": -1.2921, "longitude": 36.8219}
 ]
