@@ -12,6 +12,23 @@ from database_operations import (
 )
 
 API_KEY = "f5fbf7aa-06a3-403a-8e34-906a773a4d8a" # Replace with your api key.
+LOCATIONS_FILE = "locations.json" # Configuration file for locations
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+def load_locations():
+    """Loads locations from the locations.json file."""
+    try:
+        # Get the directory of the current script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Construct the full path to the locations.json file
+        full_path = os.path.join(script_dir, "..", LOCATIONS_FILE)
+        logging.info(f"Loading locations from: {full_path}") #added this.
+        with open(full_path, "r") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logging.error(f"Error loading locations: {e}")
+        return []
 
 def get_air_quality_data(latitude, longitude):
     """Retrieves air quality data from the AirVisual API."""
@@ -34,13 +51,18 @@ def process_air_quality_data(data):
         weather = city_data['current']['weather']
         location = city_data['location']
 
+        # Extract city, state, and country from the root of the data
+        city = city_data.get('city', 'Unknown')
+        state = city_data.get('state', 'Unknown')
+        country = city_data.get('country', 'Unknown')
+
         processed_data = {
             'timestamp': measurements['ts'],
             'latitude': location['coordinates'][1],
             'longitude': location['coordinates'][0],
-            'city': location.get('city', 'Unknown'),  # Use .get() with a default value
-            'state': location.get('state', 'Unknown'),#added .get()
-            'country': location.get('country', 'Unknown'), #added .get()
+            'city': city,
+            'state': state,
+            'country': country,
             'aqi': measurements['aqius'],
             'main_pollutant': measurements['mainus'],
             'pm25': measurements.get('aqicn', None),
@@ -61,20 +83,12 @@ def process_air_quality_data(data):
         print("process_air_quality_data: data was invalid")
         return None
 
-
-if __name__ == "__main__":
-    db_path = os.path.join("data", "raw", "air_quality_data.db")
-    conn = create_database_connection(db_path)
+def fetch_and_store_data(): #modified this function.
+    """Fetches air quality data for all locations and stores it in the database."""
+    conn = create_database_connection("data/raw/air_quality_data.db")
     if conn:
         create_air_quality_table(conn)
-        locations = [
-            {"latitude": 34.0522, "longitude": -118.2437},  # Los Angeles
-            {"latitude": 35.6895, "longitude": 139.6917},  # Tokyo
-            {"latitude": 51.5074, "longitude": -0.1278},  # London
-            {"latitude": 19.4326, "longitude": -99.1332},  # Mexico City
-            {"latitude": -1.2921, "longitude": 36.8219},  # Nairobi
-        ]
-
+        locations = load_locations() #loading locations from the json file.
         for location in locations:
             latitude = location["latitude"]
             longitude = location["longitude"]
@@ -83,5 +97,19 @@ if __name__ == "__main__":
                 processed_data = process_air_quality_data(api_data)
                 if processed_data:
                     insert_air_quality_data(conn, processed_data)
-            time.sleep(1)  # add a 1-second delay to avoid rate limiting.
+            time.sleep(1)
         conn.close()
+    else:
+        logging.error("Failed to connect to the database.")
+
+def run_scheduler(): #Added this function.
+    """Runs the scheduler to fetch and store data hourly."""
+    schedule.every().hour.do(fetch_and_store_data)
+    logging.info("Scheduler started. Running hourly.")
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+if __name__ == "__main__":
+    fetch_and_store_data() # Run once for testing.
+    run_scheduler()  # Added this.
