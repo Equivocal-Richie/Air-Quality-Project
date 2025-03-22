@@ -1,5 +1,4 @@
 import sqlite3
-import logging
 import pandas as pd
 import os
 
@@ -46,70 +45,19 @@ def create_air_quality_table(conn):
                 wind_speed REAL,
                 wind_direction REAL,
                 pressure REAL
-                station_name TEXT
             );
         """)
-        cursor.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON air_quality (timestamp);")
         conn.commit()
-        logging.info("Air Quality Table Created")
+        print("Air Quality Table Created")
     except sqlite3.Error as e:
-        logging.error(f"Error creating table: {e}")
+        print(f"Error creating table: {e}")
 
 
 def insert_air_quality_data(conn, data):
-    """Inserts air quality data into the database, checking for duplicates."""
+    """Inserts air quality data into the database."""
     try:
         df = pd.DataFrame([data])
         df.to_sql('air_quality', conn, if_exists='append', index=False)
         conn.commit()
-        logging.info(f"Inserted data for timestamp: {data['timestamp']}")
     except sqlite3.Error as e:
-        logging.error(f"Error inserting data: {e}")
-        logging.error(f"Data that caused error: {data}")
-def update_location_in_database(conn, location_data):
-    """
-    Updates location information (name, coordinates) in the database.
-    This function is crucial for handling changes in station names or coordinates.
-    """
-    try:
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            UPDATE air_quality
-            SET latitude = ?, longitude = ?, city = ?
-            WHERE station_name = ?;
-            """,
-            (
-                location_data["latitude"],
-                location_data["longitude"],
-                location_data["name"],
-                location_data["original_name"],  # Use original name to find the record
-            ),
-        )
-        conn.commit()
-        if cursor.rowcount > 0:
-            logging.info(
-                f"Updated location for station: {location_data['original_name']} to {location_data['name']}"
-            )
-        else:
-            logging.info(
-                f"Location not found for station: {location_data['original_name']}.  No update performed."
-            )
-    except sqlite3.Error as e:
-        logging.error(f"Error updating location: {e}")
-
-def check_if_location_exists(conn, station_name):
-    """Checks if a location exists in the database."""
-    try:
-        cursor = conn.cursor()
-        cursor.execute(
-            """
-            SELECT COUNT(*) FROM air_quality WHERE station_name = ?;
-            """,
-            (station_name,),
-        )
-        count = cursor.fetchone()[0]
-        return count > 0
-    except sqlite3.Error as e:
-        logging.error(f"Error checking location existence: {e}")
-        return False
+        print(f"Error inserting data: {e}")
