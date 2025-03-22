@@ -38,9 +38,9 @@ def process_air_quality_data(data):
             'timestamp': measurements['ts'],
             'latitude': location['coordinates'][1],
             'longitude': location['coordinates'][0],
-            'city': location['city'],
-            'state': location['state'],
-            'country': location['country'],
+            'city': location.get('city', 'Unknown'),  # Use .get() with a default value
+            'state': location.get('state', 'Unknown'),#added .get()
+            'country': location.get('country', 'Unknown'), #added .get()
             'aqi': measurements['aqius'],
             'main_pollutant': measurements['mainus'],
             'pm25': measurements.get('aqicn', None),
@@ -83,5 +83,5 @@ if __name__ == "__main__":
                 processed_data = process_air_quality_data(api_data)
                 if processed_data:
                     insert_air_quality_data(conn, processed_data)
-            time.sleep(1)  # add a 1 second delay to avoid rate limiting.
+            time.sleep(1)  # add a 1-second delay to avoid rate limiting.
         conn.close()
