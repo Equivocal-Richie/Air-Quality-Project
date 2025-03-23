@@ -83,33 +83,48 @@ def process_air_quality_data(data):
         print("process_air_quality_data: data was invalid")
         return None
 
-def fetch_and_store_data(): #modified this function.
-    """Fetches air quality data for all locations and stores it in the database."""
+def fetch_and_store_data(location): #modified to accept one location
+    """Fetches air quality data for the provided location and stores it in the database."""
     conn = create_database_connection("data/raw/air_quality_data.db")
     if conn:
-        create_air_quality_table(conn)
-        locations = load_locations() #loading locations from the json file.
-        for location in locations:
-            latitude = location["latitude"]
-            longitude = location["longitude"]
-            api_data = get_air_quality_data(latitude, longitude)
-            if api_data:
-                processed_data = process_air_quality_data(api_data)
-                if processed_data:
-                    insert_air_quality_data(conn, processed_data)
-            time.sleep(1)
+        latitude = location["latitude"]
+        longitude = location["longitude"]
+        api_data = get_air_quality_data(latitude, longitude)
+        if api_data:
+            processed_data = process_air_quality_data(api_data)
+            if processed_data:
+                insert_air_quality_data(conn, processed_data)
         conn.close()
     else:
         logging.error("Failed to connect to the database.")
 
-def run_scheduler(): #Added this function.
+
+def run_scheduler():
     """Runs the scheduler to fetch and store data hourly."""
-    schedule.every().hour.do(fetch_and_store_data)
-    logging.info("Scheduler started. Running hourly.")
+    all_locations = load_locations()
+    if not all_locations:
+        return
+
+    interval_minutes = 60 / len(all_locations)  # Calculate interval.
+    logging.info(f"Scheduling requests every {interval_minutes} minutes.")
+
+    def schedule_requests():
+        for i, location in enumerate(all_locations):
+            delay_seconds = i * interval_minutes * 60  # Calculate delay for each request.
+            schedule.every(delay_seconds).seconds.do(fetch_and_store_data, location) #add to scheduler.
+        schedule.every().hour.at(":00").do(schedule_requests) #reschedule every hour.
+
+    schedule_requests() #run once immediately.
+
     while True:
         schedule.run_pending()
         time.sleep(1)
 
 if __name__ == "__main__":
-    fetch_and_store_data() # Run once for testing.
-    run_scheduler()  # Added this.
+    conn = create_database_connection("data/raw/air_quality_data.db")
+    if conn:
+        create_air_quality_table(conn)
+        conn.close()
+        run_scheduler()
+    else:
+        logging.error("Failed to connect to the database.")
