@@ -1,14 +1,15 @@
 import requests
 import json
 import os
-import random
+import sqlite3
 import time
 import schedule
 import logging
 from database_operations import (
     create_database_connection,
     create_air_quality_table,
-    insert_air_quality_data
+    insert_air_quality_data,
+    remove_duplicate_data
 )
 
 API_KEY = "f5fbf7aa-06a3-403a-8e34-906a773a4d8a" # Replace with your api key.
@@ -93,7 +94,13 @@ def fetch_and_store_data(location): #modified to accept one location
         if api_data:
             processed_data = process_air_quality_data(api_data)
             if processed_data:
-                insert_air_quality_data(conn, processed_data)
+                try:
+                    insert_air_quality_data(conn, processed_data)
+                except sqlite3.IntegrityError as e:
+                    logging.warning(f"Database Integrity Error: {e}. Data not inserted: {processed_data}")
+                except Exception as e:
+                    logging.error(f"Database Error: {e}. Data not inserted: {processed_data}")
+        remove_duplicate_data(conn)  # call to remove duplicates
         conn.close()
     else:
         logging.error("Failed to connect to the database.")
@@ -110,11 +117,11 @@ def run_scheduler():
 
     def schedule_requests():
         for i, location in enumerate(all_locations):
-            delay_seconds = i * interval_minutes * 60  # Calculate delay for each request.
-            schedule.every(delay_seconds).seconds.do(fetch_and_store_data, location) #add to scheduler.
-        schedule.every().hour.at(":00").do(schedule_requests) #reschedule every hour.
+            minute_offset = i * interval_minutes
+            schedule.every().hour.at(f":{int(minute_offset):02}") \
+                .do(fetch_and_store_data, location)
 
-    schedule_requests() #run once immediately.
+    schedule_requests() # Schedule for the current hour.
 
     while True:
         schedule.run_pending()

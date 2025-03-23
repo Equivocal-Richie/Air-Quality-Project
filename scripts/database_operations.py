@@ -1,5 +1,5 @@
 import sqlite3
-import pandas as pd
+import logging
 import os
 
 def create_database_connection(db_file):
@@ -56,8 +56,58 @@ def create_air_quality_table(conn):
 def insert_air_quality_data(conn, data):
     """Inserts air quality data into the database."""
     try:
-        df = pd.DataFrame([data])
-        df.to_sql('air_quality', conn, if_exists='append', index=False)
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO air_quality (
+                timestamp, latitude, longitude, city, state, country,
+                aqi, main_pollutant, pm25, pm10, o3, no2, so2, co,
+                temperature, humidity, wind_speed, wind_direction, pressure
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                data["timestamp"],
+                data["latitude"],
+                data["longitude"],
+                data["city"],
+                data["state"],
+                data["country"],
+                data["aqi"],
+                data["main_pollutant"],
+                data["pm25"],
+                data["pm10"],
+                data["o3"],
+                data["no2"],
+                data["so2"],
+                data["co"],
+                data["temperature"],
+                data["humidity"],
+                data["wind_speed"],
+                data["wind_direction"],
+                data["pressure"],
+            ),
+        )
         conn.commit()
+    except sqlite3.IntegrityError as e:
+        raise e
+    except Exception as e:
+        logging.error(f"Database Error: {e}")
+        raise e
+
+def remove_duplicate_data(conn): #added function
+    """Removes duplicate air quality data from the database."""
+    try:
+        sql_delete_duplicates = """
+            DELETE FROM air_quality
+            WHERE rowid NOT IN (
+                SELECT MIN(rowid)
+                FROM air_quality
+                GROUP BY timestamp, latitude, longitude, city, state, country, aqi, main_pollutant, pm25, pm10, o3, no2, so2, co, temperature, humidity, wind_speed, wind_direction, pressure
+            );
+        """
+        cur = conn.cursor()
+        cur.execute(sql_delete_duplicates)
+        conn.commit()
+        logging.info("Duplicate data removed.")
     except sqlite3.Error as e:
-        print(f"Error inserting data: {e}")
+        logging.error(f"Error removing duplicate data: {e}")
