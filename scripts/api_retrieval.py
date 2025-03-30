@@ -11,8 +11,10 @@ from database_operations import (
     insert_air_quality_data,
     remove_duplicate_data
 )
+from dotenv import load_dotenv
 
-API_KEY = "" # Replace with your api key.
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
 LOCATIONS_FILE = "locations.json" # Configuration file for locations
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -24,7 +26,7 @@ def load_locations():
         script_dir = os.path.dirname(os.path.abspath(__file__))
         # Construct the full path to the locations.json file
         full_path = os.path.join(script_dir, "..", LOCATIONS_FILE)
-        logging.info(f"Loading locations from: {full_path}") #added this.
+        logging.info(f"Loading locations from: {full_path}")
         with open(full_path, "r") as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError) as e:
@@ -78,7 +80,7 @@ def process_air_quality_data(data):
             'wind_direction': weather['wd'],
             'pressure': weather['pr']
         }
-        print("Processed Data:", processed_data) # Add this line
+        print("Processed Data:", processed_data) # Print the processed batch
         return processed_data
     else:
         print("process_air_quality_data: data was invalid")
