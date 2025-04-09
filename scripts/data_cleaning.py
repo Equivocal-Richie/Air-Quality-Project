@@ -19,8 +19,10 @@ def load_data_from_sqlite(db_path):
     df = pd.read_sql_query(query, conn)
     conn.close()
     return df
+# Get the script Directory
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
-script_dir = os.path.dirname(os.path.abspath(__file__)) #Get the script Directory
+# Path to the SQLite database
 db_path = os.path.join(script_dir, "..", "data", "raw", "air_quality_data.db")
 
 df = load_data_from_sqlite(db_path)
@@ -73,8 +75,12 @@ df['wind_speed'] = df['wind_speed'].apply(lambda x: x if x <= df['wind_speed'].q
 # Pressure (Low end is valid)
 df['pressure'] = df['pressure'].apply(lambda x: x if x >= df['pressure'].quantile(0.01) else df['pressure'].quantile(0.01))
 
-# Store the cleaned data as a csv file
-df.to_csv('data/processed/cleaned_data.csv', index=False)
+# Store the cleaned data
+# Construct the path to save cleaned_data.csv
+csv_path = os.path.join(script_dir, "..", "data", "processed", "cleaned_data.csv")
+
+# Save the cleaned data to the CSV file
+df.to_csv(csv_path, index=False)
 
 
 
@@ -144,3 +150,4 @@ def get_error_details(df, check):
     return "Details not available"
 
 check_for_inconsistencies(df)
+
