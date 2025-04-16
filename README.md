@@ -28,7 +28,7 @@ This project aims to predict the Air Quality Index (AQI) based on various enviro
     
 ---
 
-**Project Goal:(#project-goal)**
+## Project Goal:
 
 The primary objective of this project is to build and deploy a robust and user-friendly system for predicting the Air Quality Index (AQI). This involves:
 
@@ -38,7 +38,7 @@ The primary objective of this project is to build and deploy a robust and user-f
     
 ---
 
-**Technical Highlights:**
+## Technical Highlights:
 
 This project showcases expertise in the following key areas:
 
@@ -56,7 +56,7 @@ This project showcases expertise in the following key areas:
 
 ---
 
-**Repository Structure:**
+## Repository Structure:
 
 Air-Quality-Project/
 ├── .venv/                     # Virtual environment (contains project dependencies)
@@ -77,7 +77,7 @@ Air-Quality-Project/
 
 ---
 
-**Setup and Installation:**
+## Setup and Installation:
 
 To run this project locally, follow these steps:
 
@@ -112,13 +112,16 @@ To run this project locally, follow these steps:
     pip install pandas scikit-learn streamlit matplotlib joblib schedule
     ```
 
-**Data Sources:**
+---
+
+## Data Sources:
 
   * *AirVisual API*
   * *Frequency of data updates: Every 1 hour.*
 
+---
 
-**Usage:**
+## Usage:
 
 1.  **Run the Streamlit Application:**
 
@@ -151,7 +154,7 @@ To run this project locally, follow these steps:
 
 ---
 
-**Model Development:**
+## Model Development:
 
 The machine learning model development process involved the following key steps:
 
@@ -164,7 +167,7 @@ The machine learning model development process involved the following key steps:
 
 ---
 
-**Streamlit Application:**
+## Streamlit Application:
 
 The Streamlit application (`streamlit_app.py`) provides an interactive interface for users to:
 
@@ -176,7 +179,7 @@ The Streamlit application (`streamlit_app.py`) provides an interactive interface
 
 ---
 
-**Challenges and Solutions:**
+## Challenges and Solutions:
 
 During the project, we encountered and successfully addressed the following challenges:
 
@@ -187,7 +190,7 @@ During the project, we encountered and successfully addressed the following chal
 
 ---
 
-**Future Improvements:**
+## Future Improvements:
 
 While the current implementation is robust, several potential improvements can be explored in the future:
 
@@ -200,13 +203,13 @@ While the current implementation is robust, several potential improvements can b
 
 ---
 
-**License:**
+## License:
 
 This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-**Author:**
+## Author:
 
 [Richard Muchoki](https://www.richardmuchoki.vercel.app)<br>
 [LinkedIn Profile](https://www.linkedin.com/in/richard-muchoki-2408b7205/)<br>
