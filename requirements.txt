@@ -1,7 +1,13 @@
-pandas
+pandas~=2.2.3
 requests~=2.32.3
 logging~=0.4.9.6
 schedule~=1.2.2
 django-scheduler~=0.10.1
 dotenv~=0.9.9
 python-dotenv~=1.0.1
+matplotlib~=3.10.1
+seaborn
+scikit-learn~=1.6.1
+streamlit
+numpy~=2.2.4
+joblib~=1.4.2
