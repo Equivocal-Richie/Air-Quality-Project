@@ -25,6 +25,8 @@ This project aims to predict the Air Quality Index (AQI) based on various enviro
   * [Future Improvements](#future-improvements)
   * [License](#license)
   * [Author](#author)
+    
+---
 
 **Project Goal:**
 
@@ -33,14 +35,16 @@ The primary objective of this project is to build and deploy a robust and user-f
   * Developing an accurate machine learning model capable of learning complex relationships between environmental factors and AQI.
   * Creating an interactive web application that allows users to easily interact with the model and understand the predictions.
   * Providing insightful visualizations to contextualize the predictions and reveal underlying data patterns.
+    
+---
 
 **Technical Highlights:**
 
 This project showcases expertise in the following key areas:
 
   * **End-to-End Data Science Workflow:** Demonstrates proficiency in all stages of a data science project, from data acquisition and preprocessing to model development, evaluation, and deployment.
-  * **Machine Learning Expertise:** Utilizes advanced machine learning techniques, specifically a gradient boosting regressor (e.g., XGBoost, LightGBM, or scikit-learn's GradientBoostingRegressor), known for its high predictive power.
-  * **Hyperparameter Tuning and Cross-Validation:** Employs rigorous model optimization strategies (GridSearchCV or RandomizedSearchCV) with k-fold cross-validation to ensure robust model performance and generalization.
+  * **Machine Learning Expertise:** Utilizes advanced machine learning techniques, specifically a gradient boosting regressor ( scikit-learn's GradientBoostingRegressor), known for its high predictive power.
+  * **Hyperparameter Tuning and Cross-Validation:** Employs rigorous model optimization strategies (GridSearchCV) with k-fold cross-validation to ensure robust model performance and generalization.
   * **Feature Engineering:** Demonstrates the ability to create relevant and informative features from raw data, including temporal features, interaction terms, and derived quantities (e.g., wind vector components, time since last peak pollutant).
   * **Interactive Web Application Development:** Leverages the Streamlit framework to build a user-friendly and interactive web application for model deployment and visualization.
   * **Data Visualization:** Creates clear and informative visualizations using Matplotlib to communicate data insights effectively (AQI distribution, feature correlations with labeled axes).
@@ -49,6 +53,8 @@ This project showcases expertise in the following key areas:
   * **Virtual Environment Management:** Emphasizes the use of a virtual environment (`.venv`) to manage project dependencies and ensure reproducibility.
   * **Modular Code Structure:** Organizes the project into logical modules (`api_retrieval.py`, `data_cleaning.py`, `feature_engineering.py`, `model.py`, `streamlit_app.py`, `automation.py`) for better maintainability and scalability.
   * **Comprehensive Documentation:** Provides thorough documentation (this `README.md`) to explain the project, its setup, usage, and technical details.
+
+---
 
 **Repository Structure:**
 
@@ -68,6 +74,8 @@ Air-Quality-Project/
 ├── notebooks/                # Jupyter notebooks for exploration and experimentation (optional)
 ├── README.md                 # Project documentation (this file)
 └── requirements.txt          # List of project dependencies
+
+---
 
 **Setup and Installation:**
 
@@ -141,6 +149,8 @@ To run this project locally, follow these steps:
 
     *(Explain what the automation script does, e.g., "This script will automatically fetch new data from the API every hour and update the processed data.")*
 
+---
+
 **Model Development:**
 
 The machine learning model development process involved the following key steps:
@@ -152,6 +162,8 @@ The machine learning model development process involved the following key steps:
 5.  **Model Evaluation:** The trained model was evaluated using appropriate regression metrics (e.g., Mean Squared Error, Root Mean Squared Error, R-squared) on a held-out test set to assess its performance on unseen data.
 6.  **Model Persistence:** The best-performing trained model was saved using `joblib` for deployment in the Streamlit application.
 
+---
+
 **Streamlit Application:**
 
 The Streamlit application (`streamlit_app.py`) provides an interactive interface for users to:
@@ -162,6 +174,8 @@ The Streamlit application (`streamlit_app.py`) provides an interactive interface
       * **AQI Distribution:** A histogram displays the historical distribution of AQI values, providing context for the prediction. The x-axis is labeled "AQI Value," and the y-axis is labeled "Frequency."
       * **Feature Correlations:** A correlation matrix visualizes the relationships between the numerical input features. The x and y axes are labeled with the feature names, and the color intensity indicates the correlation strength.
 
+---
+
 **Challenges and Solutions:**
 
 During the project, we encountered and successfully addressed the following challenges:
@@ -170,6 +184,8 @@ During the project, we encountered and successfully addressed the following chal
   * **Visualizing Matplotlib Plots in Streamlit:** We initially faced `AttributeError` issues when directly passing the output of `plt.hist()` and `plt.matshow()` to `st.pyplot()`. This was resolved by explicitly creating Matplotlib figure and axes objects and passing the figure to `st.pyplot()`. Axis labels were added for clarity.
   * **Consistent Feature Scaling:** We recognized the critical importance of using the *same* `StandardScaler` fitted during model training for transforming user inputs in the Streamlit app. We implemented saving the fitted scaler using `joblib` during model training and loading it in the Streamlit app before making predictions.
   * **Making Visualizations Understandable:** The initial visualizations lacked clear labels. We enhanced them by adding descriptive x and y axis labels to the AQI distribution histogram and labeled (and rotated for readability) the axes of the feature correlation matrix with the feature names.
+
+---
 
 **Future Improvements:**
 
@@ -182,9 +198,13 @@ While the current implementation is robust, several potential improvements can b
   * **User Feedback Mechanism:** Implement a way for users to provide feedback on the predictions, which could be used to further refine the model.
   * **Cloud Deployment:** Deploy the Streamlit application to a cloud platform (e.g., Streamlit Sharing, Heroku, AWS) for broader accessibility.
 
+---
+
 **License:**
 
 This project is licensed under the [MIT License](LICENSE).
+
+---
 
 **Author:**
 
