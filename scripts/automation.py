@@ -1,4 +1,3 @@
-# scripts/automation.py
 import subprocess
 import schedule
 import time
@@ -6,30 +5,23 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def run_api_retrieval():
-    logging.info("Running api_retrieval.py...")
-    subprocess.run(['python', 'scripts/api_retrieval.py'])
+def run_script(script_name):
+    try:
+        logging.info(f"Running {script_name}...")
+        subprocess.run(['python', script_name], check=True)
+        logging.info(f"{script_name} executed successfully.")
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Error running {script_name}: {e}")
 
-def run_data_cleaning():
-    logging.info("Running data_cleaning.py...")
-    subprocess.run(['python', 'scripts/data_cleaning.py'])
+def run_all_scripts():
+    run_script('api_retrieval.py')
+    run_script('data_cleaning.py')
+    run_script('feature_engineering.py')
+    run_script('model.py')
+    logging.info("All scripts executed.")
 
-def run_feature_engineering():
-    logging.info("Running feature_engineering.py...")
-    subprocess.run(['python', 'scripts/feature_engineering.py'])
-
-def run_model():
-    logging.info("Running model.py...")
-    subprocess.run(['python', 'scripts/model.py'])
-
-def run_pipeline():
-    run_api_retrieval()
-    run_data_cleaning()
-    run_feature_engineering()
-    # run_model()  # Uncomment when ready
-
-# Schedule the pipeline to run hourly (or as needed)
-schedule.every().hour.at(":00").do(run_pipeline)
+# Schedule the pipeline to run hourly
+schedule.every().hour.at(":00").do(run_all_scripts)
 
 while True:
     schedule.run_pending()
