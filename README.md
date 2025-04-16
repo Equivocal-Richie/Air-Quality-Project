@@ -188,6 +188,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 **Author:**
 
-[Richard Muchoki](richardmuchoki.vercel.app)<br>
+[Richard Muchoki](https://www.richardmuchoki.vercel.app)<br>
 [LinkedIn Profile](https://www.linkedin.com/in/richard-muchoki-2408b7205/)<br>
-[Email Address](mrichardmuchoki@gmail.com)
