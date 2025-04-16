@@ -28,7 +28,7 @@ This project aims to predict the Air Quality Index (AQI) based on various enviro
     
 ---
 
-**Project Goal:**
+**Project Goal:(#project-goal)**
 
 The primary objective of this project is to build and deploy a robust and user-friendly system for predicting the Air Quality Index (AQI). This involves:
 
