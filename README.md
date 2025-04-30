@@ -58,22 +58,7 @@ This project showcases expertise in the following key areas:
 
 ## Repository Structure:
 
-Air-Quality-Project/
-├── .venv/                     # Virtual environment (contains project dependencies)
-├── data/
-│   ├── raw/                  # Raw, unprocessed data (e.g., downloaded CSV files)
-│   └── processed/            # Cleaned and feature-engineered data (e.g., featured_data.csv)
-├── models/                   # Saved trained machine learning models (e.g., gb_best_model.joblib, scaler.joblib)
-├── scripts/                  # Python scripts for various project stages
-│   ├── api_retrieval.py      # Script to fetch data from an API (if applicable)
-│   ├── data_cleaning.py      # Script for cleaning and preprocessing data
-│   ├── feature_engineering.py# Script for creating new features
-│   ├── model.py              # Script for training and evaluating the machine learning model
-│   ├── streamlit_app.py      # Script for the Streamlit web application
-│   └── automation.py         # Script for automating the data pipeline (if applicable)
-├── notebooks/                # Jupyter notebooks for exploration and experimentation (optional)
-├── README.md                 # Project documentation (this file)
-└── requirements.txt          # List of project dependencies
+![Air-Quality-Project](data/project_structure.JPG) 
 
 ---
 
